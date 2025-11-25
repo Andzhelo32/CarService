@@ -1,5 +1,7 @@
 ﻿using CarService.BL.Interfaces;
 using CarService.Models.Dto;
+using CarService.Models.Requests;
+using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarService.Host.Controllers
@@ -9,10 +11,14 @@ namespace CarService.Host.Controllers
     public class CarsController : ControllerBase
     {
         private readonly ICarCrudService _carCrudService;
+        private readonly IMapper _mapper;
 
-        public CarsController(ICarCrudService carCrudService)
+        public CarsController(
+            ICarCrudService carCrudService,
+            IMapper mapper)
         {
             _carCrudService = carCrudService;
+            _mapper = mapper;
         }
 
         [HttpDelete]
@@ -57,12 +63,14 @@ namespace CarService.Host.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddCar([FromBody] Car? car)
+        public IActionResult AddCar([FromBody] AddCarRequest? carRequest)
         {
-            if (car == null)
+            if (carRequest == null)
             {
                 return BadRequest("Car data is null.");
             }
+
+            var car = _mapper.Map<Car>(carRequest);
 
             _carCrudService.AddCar(car);
 

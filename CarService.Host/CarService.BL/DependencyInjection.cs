@@ -1,5 +1,6 @@
 ﻿using CarService.BL.Interfaces;
 using CarService.BL.Services;
+using CarService.DL.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CarService.BL
@@ -10,8 +11,8 @@ namespace CarService.BL
             AddBusinessLayer(this IServiceCollection services)
         {
             // Register data layer services here
-            services.AddSingleton<ICarCrudService,
-                CarCrudService>();
+            services.AddSingleton<ICarCrudService,CarCrudService>();
+            services.AddSingleton<ICustomerCrudService, CustomerCrudService>();
 
             return services;
         }

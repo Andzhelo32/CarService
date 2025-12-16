@@ -1,26 +1,25 @@
 ﻿using CarService.BL.Interfaces;
+using CarService.DL.Interfaces;
 using CarService.Models.Dto;
 using CarService.Models.Requests;
 using FluentValidation;
-using FluentValidation.Results;
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
-using System;
 
 namespace CarService.Host.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CarsController : ControllerBase
+    public class CustomerController : ControllerBase
     {
-        private readonly ICarCrudService _carCrudService;
+        private readonly ICustomerCrudService _carCrudService;
         private readonly IMapper _mapper;
-        private IValidator<AddCarRequest> _validator;
+        private IValidator<AddCustomerRequest> _validator;
 
-        public CarsController(
-            ICarCrudService carCrudService,
+        public CustomerController(
+            ICustomerCrudService carCrudService,
             IMapper mapper,
-            IValidator<AddCarRequest> validator)
+            IValidator<AddCustomerRequest> validator)
         {
             _carCrudService = carCrudService;
             _mapper = mapper;
@@ -39,7 +38,7 @@ namespace CarService.Host.Controllers
             {
                 return NotFound($"Car with ID {id} not found.");
             }
-            _carCrudService.DeleteCar(id);
+            _carCrudService.DeleteCustomer(id);
             return Ok();
         }
 
@@ -52,7 +51,7 @@ namespace CarService.Host.Controllers
             }
 
             var car = _carCrudService.GetById(id);
-
+            
             if (car == null)
             {
                 return NotFound($"Car with ID {id} not found.");
@@ -64,12 +63,12 @@ namespace CarService.Host.Controllers
         [HttpGet(nameof(GetAll))]
         public IActionResult GetAll()
         {
-            var cars = _carCrudService.GetAllCars();
+            var cars = _carCrudService.GetAllCustomers();
             return Ok(cars);
         }
 
         [HttpPost]
-        public IActionResult AddCar([FromBody] AddCarRequest? carRequest)
+        public IActionResult AddCar([FromBody] AddCustomerRequest? carRequest)
         {
             if (carRequest == null)
             {
@@ -83,9 +82,9 @@ namespace CarService.Host.Controllers
                 return BadRequest(result.Errors);
             }
 
-            var car = _mapper.Map<Car>(carRequest);
+            var car = _mapper.Map<Customer>(carRequest);
 
-            _carCrudService.AddCar(car);
+            _carCrudService.AddCustomer(car);
 
             return Ok();
         }

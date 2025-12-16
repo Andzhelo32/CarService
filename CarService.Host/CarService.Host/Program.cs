@@ -2,6 +2,10 @@
 using CarService.BL;
 using CarService.DL;
 using CarService.Host.Healthchecks;
+using CarService.Host.Validators;
+using FluentValidation;
+
+//using FluentValidation;
 using Mapster;
 using Microsoft.OpenApi.Models;
 using Serilog;
@@ -27,6 +31,9 @@ namespace CarService.Host
                 .AddBusinessLayer();
 
             builder.Services.AddMapster();
+
+            builder.Services
+                .AddValidatorsFromAssemblyContaining<AddCarRequestValidator>();
 
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

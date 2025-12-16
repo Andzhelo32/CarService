@@ -4,6 +4,8 @@ using CarService.DL;
 using CarService.Host.Healthchecks;
 using CarService.Host.Validators;
 using FluentValidation;
+
+//using FluentValidation;
 using Mapster;
 using Microsoft.OpenApi.Models;
 using Serilog;

@@ -1,8 +1,11 @@
 ﻿using CarService.BL.Interfaces;
 using CarService.Models.Dto;
 using CarService.Models.Requests;
+using FluentValidation;
+using FluentValidation.Results;
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace CarService.Host.Controllers
 {
@@ -12,13 +15,16 @@ namespace CarService.Host.Controllers
     {
         private readonly ICarCrudService _carCrudService;
         private readonly IMapper _mapper;
+        private IValidator<AddCarRequest> _validator;
 
         public CarsController(
             ICarCrudService carCrudService,
-            IMapper mapper)
+            IMapper mapper,
+            IValidator<AddCarRequest> validator)
         {
             _carCrudService = carCrudService;
             _mapper = mapper;
+            _validator = validator;
         }
 
         [HttpDelete]
@@ -70,7 +76,14 @@ namespace CarService.Host.Controllers
                 return BadRequest("Car data is null.");
             }
 
-            var car = _mapper.Map<Car>(carRequest);
+            var result = _validator.Validate(carRequest);
+
+            if (!result.IsValid)
+            {
+                return BadRequest(result.Errors);
+            }
+
+                var car = _mapper.Map<Car>(carRequest);
 
             _carCrudService.AddCar(car);
 

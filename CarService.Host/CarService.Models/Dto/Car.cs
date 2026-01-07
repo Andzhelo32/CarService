@@ -8,6 +8,6 @@
 
         public int Year { get; set; }
 
-
+        public decimal BasePrice { get; set; }
     }
 }
